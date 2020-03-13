@@ -46,10 +46,12 @@ func NewLogger(opts ...Option) *Logger {
 }
 
 // Конструктор синглтона
-func Init(opts ...Option) {
+func Init(opts ...Option) (ok bool) {
 	if logger == nil {
 		logger = NewLogger(opts...)
 	}
+
+	return logger == nil
 }
 
 // геттер для синглтона
