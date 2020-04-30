@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"database/sql"
+	stash "github.com/Delisa-sama/logger/stash"
 	"github.com/fatih/color"
 	"io"
 	"os"
@@ -11,15 +13,15 @@ import (
 type LogLevel int
 
 const (
-	FATAL = iota  // Фатальный уровень, вызывает падение приложения
-	ERROR         // Ошибка
-	WARN          // Предупреждение
-	DEBUG         // Дебаг
-	INFO          // Информационные логи
+	FATAL = iota // Фатальный уровень, вызывает падение приложения
+	ERROR        // Ошибка
+	WARN         // Предупреждение
+	DEBUG        // Дебаг
+	INFO         // Информационные логи
 )
 
 func (l LogLevel) String() string {
-	return [...]string{"FATAL", "ERROR", "WARN", "DEBUG", "INFO"}[l]
+	return [...]string{"FATAL", "ERROR", "WARN", "DEBUG", "INFO", "STASH"}[l]
 }
 
 type Options struct {
@@ -28,6 +30,7 @@ type Options struct {
 	colorize       bool
 	colorFunctions WriterFunctions
 	timeFormat     string
+	stash          *stash.Stash
 }
 
 type Option func(o *Options)
@@ -92,5 +95,11 @@ func WriterFunc(writerFunc *WriterFunctions) Option {
 		for level, function := range *writerFunc {
 			o.colorFunctions[level] = function
 		}
+	}
+}
+
+func Stash(db *sql.DB) Option {
+	return func(o *Options) {
+		o.stash = stash.NewStash(db)
 	}
 }

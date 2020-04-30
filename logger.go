@@ -27,6 +27,9 @@ type LogWriter interface {
 	// Логи уровня WARN
 	Warn(v ...interface{})
 	Warnf(format string, v ...interface{})
+
+	Stash(requestId string, v ...interface{})
+	Stashf(requestId, format string, v ...interface{})
 }
 
 // escape последовательность для очищения значения текущего цвета
@@ -152,5 +155,22 @@ func (l *Logger) Warn(v ...interface{}) {
 func (l *Logger) Warnf(format string, v ...interface{}) {
 	if l.opts.level >= WARN {
 		l.printf(WARN, format, v...)
+	}
+}
+
+// отправка лога в удаленное хранилище логов
+// удаленное хранилище должно быть заранее инициализировано через опции логгера
+// в случае отсутствия проинициализированного удаленного хранилища, лог просто не отправится
+// в случае возникновения ошибок при отправке, ошибки игнорируются
+func (l *Logger) Stash(requestId string, v ...interface{}) {
+	if l.opts.stash != nil {
+		_ = l.opts.stash.Send(requestId, fmt.Sprint(v))
+	}
+}
+
+// отправка лога с форматированием в удаленное хранилище логов
+func (l *Logger) Stashf(requestId, format string, v ...interface{}) {
+	if l.opts.stash != nil {
+		_ = l.opts.stash.Send(requestId, fmt.Sprintf(format, v))
 	}
 }
