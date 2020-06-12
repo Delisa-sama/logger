@@ -174,3 +174,72 @@ func (l *Logger) Stashf(requestId, format string, v ...interface{}) {
 		_ = l.opts.stash.Send(requestId, fmt.Sprintf(format, v))
 	}
 }
+
+// проверить был ли проинициализирован логгер уровня пакета
+// бросает panic если инстанс nil
+func AssertInstanceInitialized() {
+	if logger == nil {
+		panic("Logger instance was't initialized")
+	}
+}
+
+// обертки для удобного использования логгера уровня пакета
+func Error(v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Error(v...)
+}
+
+func Errorf(format string, v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Errorf(format, v...)
+}
+
+func Debug(v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Debug(v...)
+}
+
+func Debugf(format string, v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Debugf(format, v...)
+}
+
+func Fatal(v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Fatal(v...)
+}
+
+func Fatalf(format string, v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Fatalf(format, v...)
+}
+
+func Info(v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Info(v...)
+}
+
+func Infof(format string, v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Infof(format, v...)
+}
+
+func Warn(v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Warn(v...)
+}
+
+func Warnf(format string, v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Warnf(format, v...)
+}
+
+func Stash(requestId string, v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Stash(requestId, v...)
+}
+
+func Stashf(requestId, format string, v ...interface{}) {
+	AssertInstanceInitialized()
+	logger.Stashf(requestId, format, v...)
+}

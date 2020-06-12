@@ -98,7 +98,7 @@ func WriterFunc(writerFunc *WriterFunctions) Option {
 	}
 }
 
-func Stash(db *sql.DB) Option {
+func StashOutput(db *sql.DB) Option {
 	return func(o *Options) {
 		o.stash = stash.NewStash(db)
 	}
