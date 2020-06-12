@@ -78,7 +78,7 @@ func (l *Logger) printf(level LogLevel, format string, v ...interface{}) {
 	} else {
 		_, _ = fmt.Fprintf(l.opts.output, format, v...)
 	}
-	fmt.Println()
+	_, _ = fmt.Fprintln(l.opts.output)
 }
 
 // напечатать сообщение в stderr
