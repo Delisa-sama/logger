@@ -2,6 +2,7 @@ package logger
 
 import (
 	"database/sql"
+	"fmt"
 	stash "github.com/Delisa-sama/logger/stash"
 	"github.com/fatih/color"
 	"io"
@@ -20,8 +21,25 @@ const (
 	INFO         // Информационные логи
 )
 
+var logLevels = []string{"FATAL", "ERROR", "WARN", "DEBUG", "INFO", "STASH"}
+
 func (l LogLevel) String() string {
-	return [...]string{"FATAL", "ERROR", "WARN", "DEBUG", "INFO", "STASH"}[l]
+	return logLevels[l]
+}
+
+func (l *LogLevel) SetValue(s string) error {
+	if s == "" {
+		return fmt.Errorf("field value can't be empty")
+	}
+
+	for idx, level := range logLevels {
+		if s == level {
+			*l = LogLevel(idx)
+			return nil
+		}
+	}
+
+	return fmt.Errorf("invalid log level, expected: %v, got: %s", logLevels, s)
 }
 
 type Options struct {
